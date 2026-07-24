@@ -1,5 +1,5 @@
-const SUPABASE_URL = 'https://nyysrmvaslxetbhvirgp.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_9mSkd3QE4SIbuNxHT8qiQw_YyYc1OPd';
+const SUPABASE_URL = 'https://seedmrzhrfyhorjwraln.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_kaLWRxOu2h6lHOxi8AQhvQ_PfNq49Up';
 
 let _sb = null;
 
