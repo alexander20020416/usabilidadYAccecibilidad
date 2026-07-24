@@ -92,15 +92,15 @@
         return;
       }
 
-      let profile = await getProfile(currentUser.id);
-      if (!profile) {
-        profile = { full_name: currentUser.email, level: 'A1', streak: 0, total_exercises: 0, accuracy: 0 };
-      }
-      const initials = profile.full_name ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : currentUser.email[0].toUpperCase();
-      document.getElementById('userAvatar').textContent = initials;
-      document.getElementById('userName').textContent = profile.full_name || currentUser.email;
-
       try {
+        let profile = await getProfile(currentUser.id);
+        if (!profile) {
+          profile = { full_name: currentUser.email, level: 'A1', streak: 0, total_exercises: 0, accuracy: 0 };
+        }
+        const initials = profile.full_name ? profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : currentUser.email[0].toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+        document.getElementById('userName').textContent = profile.full_name || currentUser.email;
+
         const grammarExercises = await getExercises('grammar');
         const vocabExercises = await getExercises('vocabulary');
         questions = [...grammarExercises.slice(0, 5), ...vocabExercises.slice(0, 5)];
@@ -115,6 +115,11 @@
         renderQuestion();
       } catch (error) {
         console.error('Error loading diagnostic:', error);
+        document.getElementById('questionContainer').innerHTML =
+          '<div role="alert" style="text-align:center;padding:3rem;color:var(--error);">' +
+          '<p>Diagnostic questions could not be loaded. Reload the page or try again later.</p>' +
+          '</div>';
+        announceDiagnostic('Diagnostic questions could not be loaded. Reload the page or try again later.');
       }
     }
 

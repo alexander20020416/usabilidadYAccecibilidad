@@ -111,6 +111,15 @@ ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE daily_streak ENABLE ROW LEVEL SECURITY;
 ALTER TABLE scores ENABLE ROW LEVEL SECURITY;
 
+-- Permisos base para la API web.
+-- Las politicas RLS de abajo siguen limitando cada fila al usuario propietario.
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+GRANT SELECT ON TABLE public.exercises TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE ON TABLE public.profiles TO authenticated;
+GRANT SELECT, INSERT ON TABLE public.user_progress TO authenticated;
+GRANT SELECT, INSERT ON TABLE public.daily_streak TO authenticated;
+GRANT SELECT, INSERT ON TABLE public.scores TO authenticated;
+
 -- Profiles
 DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
 DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
