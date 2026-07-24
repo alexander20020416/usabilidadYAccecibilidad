@@ -248,6 +248,9 @@
           showError('Esta cuenta ya esta registrada. Inicia sesion o usa Reset it si olvidaste tu contrasena.');
           $('forgotGroup').style.display = 'block';
           setTimeout(() => setMode(false), 2500);
+        } else if (!isSignUp && message.includes('email not confirmed')) {
+          showError('Email not confirmed. Use Resend confirmation below, then check your inbox and spam folder.');
+          $('resendGroup').style.display = 'block';
         } else {
           showError(err.message || 'Something went wrong. Try again.');
         }
