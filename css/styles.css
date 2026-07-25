@@ -677,7 +677,7 @@ body {
 .form-input {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid var(--border);
+  border: 2px solid var(--text-light);
   border-radius: var(--radius-md);
   font-size: 1rem;
   transition: var(--transition);
