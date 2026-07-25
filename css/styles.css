@@ -1426,6 +1426,11 @@ body {
   margin-top: 1.5rem;
 }
 
+.stats-sidebar:focus-visible {
+  outline: 4px solid #1E293B;
+  outline-offset: 4px;
+}
+
 .stats-sidebar h3 {
   font-size: 1.1rem;
   font-weight: 700;
