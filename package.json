@@ -1,0 +1,9 @@
+{
+  "name": "english-up",
+  "version": "1.0.0",
+  "private": true,
+  "description": "English Up accessibility learning application",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
