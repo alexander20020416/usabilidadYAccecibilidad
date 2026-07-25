@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual Vocabulary - English Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .vocab-page {
+      padding-top: 90px;
+      min-height: 100vh;
+    }
+    .vocab-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .vocab-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .vocab-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .vocab-header p {
+      color: var(--text-secondary);
+    }
+    .vocab-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .vocab-progress-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .vocab-progress-fill {
+      height: 100%;
+      background: var(--primary-gradient);
+      border-radius: var(--radius-full);
+      transition: width 0.5s ease;
+    }
+    .vocab-progress-text {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.9rem;
+      min-width: 50px;
+      text-align: right;
+    }
+    .vocab-nav {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+    .vocab-stats {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .vocab-stat {
+      text-align: center;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .vocab-stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .vocab-stat-value.green { color: var(--success); }
+    .vocab-stat-value.red { color: var(--danger); }
+    .vocab-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-listen-image {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0.75rem auto 0;
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-listen-image:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-listen-image:focus-visible {
+      outline: 3px solid var(--primary-dark);
+      outline-offset: 3px;
+    }
+    .describe-score strong { color: var(--success); }
+    .describe-score em { color: var(--warning); }
+    .vocab-fallback {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      .vocab-container { padding: 1rem; }
+      .vocab-stats { gap: 1rem; }
+      .vocab-stat { padding: 0.5rem 1rem; }
+    }
+  </style>
+</head>
+<body data-managed-page-focus>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <header>
+  <nav class="navbar" id="navbar" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand">
+      <span class="brand-icon" aria-hidden="true">EN</span>
+      English Up
+    </a>
+    <ul class="nav-links">
+      <li><a href="dashboard.html">Home</a></li>
+      <li><a href="activities.html">Activities</a></li>
+      <li><a href="vocabulary.html" class="active" aria-current="page">Vocabulary</a></li>
+      <li><a href="progress.html">Progress</a></li>
+      <li><a href="speaking.html">Speaking</a></li>
+      <li><a href="grammar.html">Writing</a></li>
+      <li><a href="reading.html">Reading</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="nav-user" id="userMenu" aria-labelledby="userName">
+        <div class="nav-user-avatar" id="userAvatar" aria-hidden="true">--</div>
+        <span id="userName">Loading...</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="handleLogout()" aria-label="Log out">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </nav>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+  <div class="vocab-page">
+    <div class="vocab-container">
+      <div class="vocab-header">
+        <h1 id="vocabTitle">Visual Vocabulary</h1>
+        <p>Look at the images and answer the questions to build your vocabulary.</p>
+      </div>
+
+      <div class="vocab-stats" id="vocabStats" role="status" aria-live="polite">
+        <div class="vocab-stat">
+          <div class="vocab-stat-value green" id="correctCount">0</div>
+          <div class="vocab-stat-label">Correct</div>
+        </div>
+        <div class="vocab-stat">
+          <div class="vocab-stat-value red" id="incorrectCount">0</div>
+          <div class="vocab-stat-label">Incorrect</div>
+        </div>
+        <div class="vocab-stat">
+          <div class="vocab-stat-value" id="progressCount" style="color: var(--text-primary);">0 / 0</div>
+          <div class="vocab-stat-label">Completed</div>
+        </div>
+      </div>
+
+      <div class="vocab-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Exercise progress">
+        <div class="vocab-progress-bar">
+          <div class="vocab-progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <span class="vocab-progress-text" id="progressText">0%</span>
+      </div>
+
+      <div id="exerciseContent">
+        <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+          <p>Loading exercises...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main>
+
+  <script src="js/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let currentUser = null;
+    let exercises = [];
+    let currentIndex = 0;
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+
+    const FALLBACK_EXERCISES = [
+      {
+        id: 'fb1', module: 'vocabulary', title: 'Visual Vocab – Fruits',
+        question: 'Look at the image. What object do you see?',
+        options: ['An apple', 'A banana', 'An orange', 'A mango'],
+        correct_answer: 'An apple',
+        explanation: 'This is an apple. Apples are round fruits that are typically red, green, or yellow.',
+        difficulty: 'easy', order_index: 20,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A shiny red apple on a white background'
+      },
+      {
+        id: 'fb2', module: 'vocabulary', title: 'Visual Vocab – Animals',
+        question: 'Look at the image. What animal is this?',
+        options: ['A dog', 'A cat', 'A rabbit', 'A mouse'],
+        correct_answer: 'A cat',
+        explanation: 'This is a cat. Cats are common household pets known for being independent and agile.',
+        difficulty: 'easy', order_index: 21,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A fluffy orange cat sitting and looking at the camera'
+      },
+      {
+        id: 'fb3', module: 'vocabulary', title: 'Visual Vocab – Places',
+        question: 'Look at the image. What place is this?',
+        options: ['A hospital', 'A library', 'A restaurant', 'A school'],
+        correct_answer: 'A library',
+        explanation: 'This is a library. A library is a place where books and other resources are kept for people to read or borrow.',
+        difficulty: 'medium', order_index: 22,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'Rows of bookshelves filled with books inside a large library'
+      },
+      {
+        id: 'fb4', module: 'vocabulary', title: 'Visual Vocab – Weather',
+        question: 'Look at the image. What is the weather like?',
+        options: ['It is raining', 'It is cloudy', 'It is sunny', 'It is snowing'],
+        correct_answer: 'It is sunny',
+        explanation: 'The image shows a bright, clear sky with sunshine. We say the weather is sunny.',
+        difficulty: 'easy', order_index: 23,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A bright blue sky with the sun shining over a mountain landscape'
+      },
+      {
+        id: 'fb5', module: 'vocabulary', title: 'Visual Vocab – Transport',
+        question: 'Look at the image. What is this vehicle called?',
+        options: ['A motorcycle', 'A bicycle', 'A scooter', 'A tricycle'],
+        correct_answer: 'A bicycle',
+        explanation: 'This is a bicycle (also called a bike). It is a human-powered vehicle with two wheels.',
+        difficulty: 'easy', order_index: 24,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A red bicycle parked against a brick wall'
+      },
+      {
+        id: 'fb6', module: 'vocabulary', title: 'Visual Vocab – Food',
+        question: 'Look at the image. What food is this?',
+        options: ['Pasta', 'A burger', 'Pizza', 'A sandwich'],
+        correct_answer: 'Pizza',
+        explanation: 'This is a pizza. Pizza is an Italian dish with a flat dough base topped with tomato sauce, cheese, and various toppings.',
+        difficulty: 'easy', order_index: 25,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A freshly baked pizza with melted cheese and vegetables on top'
+      },
+      {
+        id: 'fb7', module: 'vocabulary', title: 'Visual Vocab – Professions',
+        question: 'Look at the image. What is this person\'s profession?',
+        options: ['A teacher', 'A chef', 'A doctor', 'An engineer'],
+        correct_answer: 'A doctor',
+        explanation: 'This is a doctor. Doctors are medical professionals who diagnose and treat illnesses and injuries.',
+        difficulty: 'medium', order_index: 26,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A doctor in a white coat holding a stethoscope'
+      },
+      {
+        id: 'fb8', module: 'vocabulary', title: 'Visual Vocab – Emotions',
+        question: 'Look at the image. Which emotion does this person show?',
+        options: ['Sad', 'Angry', 'Surprised', 'Happy'],
+        correct_answer: 'Happy',
+        explanation: 'The person in the image is smiling, which shows they are happy.',
+        difficulty: 'easy', order_index: 27,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A smiling person with a bright and joyful expression'
+      },
+      {
+        id: 'fb9', module: 'vocabulary', title: 'Visual Vocab – Nature',
+        question: 'Look at the image. What natural feature can you see?',
+        options: ['A river', 'A desert', 'A forest', 'A mountain'],
+        correct_answer: 'A mountain',
+        explanation: 'This is a mountain. A mountain is a large natural elevation of the earth\'s surface.',
+        difficulty: 'easy', order_index: 28,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A snow-capped mountain peak against a blue sky'
+      },
+      {
+        id: 'fb10', module: 'vocabulary', title: 'Visual Vocab – Actions',
+        question: 'Look at the image. What action is the person performing?',
+        options: ['Reading a book', 'Writing an email', 'Painting a picture', 'Playing chess'],
+        correct_answer: 'Reading a book',
+        explanation: 'The person is reading a book. "Read" is the verb; "reading" is the present participle.',
+        difficulty: 'medium', order_index: 29,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A person sitting comfortably and reading a book'
+      },
+      {
+        id: 'fb11', module: 'vocabulary', title: 'Visual Vocab – Home',
+        question: 'Look at the image. What room of the house is this?',
+        options: ['The bedroom', 'The bathroom', 'The living room', 'The dining room'],
+        correct_answer: 'The living room',
+        explanation: 'This is a living room. It usually has a sofa, chairs, and a TV.',
+        difficulty: 'easy', order_index: 32,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A cozy living room with a sofa, coffee table, plants, and soft lighting'
+      }
+    ];
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utt = new SpeechSynthesisUtterance(text);
+      utt.lang = 'en-US';
+      utt.rate = 0.9;
+      window.speechSynthesis.speak(utt);
+    }
+
+    function buildImageBlock(ex) {
+      if (!ex.image_url) return '';
+      const alt = ex.image_alt || 'Exercise image';
+      const caption = ex.image_alt || '';
+      return `
+        <figure class="exercise-image-figure">
+          <div class="exercise-image-wrapper">
+            <img
+              src="${ex.image_url}"
+              alt="${alt}"
+              class="exercise-image"
+              loading="lazy"
+              onerror="this.closest('.exercise-image-wrapper').innerHTML='<div class=\\'img-error\\' role=\\'img\\' aria-label=\\'Image could not be loaded\\'><svg width=\\'48\\' height=\\'48\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\' viewBox=\\'0 0 24 24\\' aria-hidden=\\'true\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'></rect><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'></circle><polyline points=\\'21 15 16 10 5 21\\'></polyline></svg><span>Image unavailable</span></div>'"
+            />
+          </div>
+          <figcaption class="exercise-image-caption">${caption}</figcaption>
+          <button
+            type="button"
+            class="btn-listen-image"
+            onclick="speakText('${alt.replace(/'/g, "\\'")}')"
+            aria-label="Listen to image description"
+            title="Listen to image description"
+          >
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+            Listen
+          </button>
+        </figure>`;
+    }
+
+    async function init() {
+      currentUser = await getUser();
+      if (!currentUser) { window.location.href = 'login.html'; return; }
+
+      const initials = currentUser.email[0].toUpperCase();
+      document.getElementById('userAvatar').textContent = initials;
+      document.getElementById('userName').textContent = currentUser.email;
+
+      try {
+        const dbExercises = await getExercises('vocabulary', null);
+        if (dbExercises && dbExercises.length > 0) {
+          const visual = dbExercises.filter(e => e.image_url && (e.exercise_type === 'image_choice' || e.exercise_type === 'image_describe'));
+          exercises = visual.length > 0 ? visual : FALLBACK_EXERCISES;
+        } else {
+          exercises = FALLBACK_EXERCISES;
+        }
+      } catch {
+        exercises = FALLBACK_EXERCISES;
+      }
+
+      if (exercises.length === 0) {
+        document.getElementById('exerciseContent').innerHTML =
+          '<div class="question-card fade-in" style="text-align:center;padding:3rem;"><p>No exercises available yet.</p></div>';
+        return;
+      }
+
+      renderExercise();
+    }
+
+    function renderExercise() {
+      if (currentIndex >= exercises.length) { showResults(); return; }
+
+      const ex = exercises[currentIndex];
+      const type = ex.exercise_type || 'image_choice';
+
+      document.getElementById('progressCount').textContent = `${currentIndex} / ${exercises.length}`;
+      const pct = Math.round((currentIndex / exercises.length) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressText').textContent = pct + '%';
+
+      const typeBadge = type === 'image_describe'
+        ? '<span class="exercise-type-badge type-describe">Describe the Image</span>'
+        : '<span class="exercise-type-badge type-visual">Visual Vocabulary</span>';
+
+      let interactionHtml = '';
+      if (type === 'image_describe') {
+        interactionHtml = `
+          <div class="describe-input-wrapper">
+            <label for="describeInput" class="describe-label">Your description:</label>
+            <textarea id="describeInput" class="describe-textarea" placeholder="Write your description here…" rows="4" maxlength="500"></textarea>
+            <p class="describe-hint">Try to use keywords from the question in your answer.</p>
+          </div>`;
+      } else {
+        const options = ex.options || [];
+        interactionHtml = '<div class="options-list" aria-label="Answer choices">' +
+          options.map(opt =>
+            `<button type="button" class="option-item" aria-pressed="false"
+              data-value="${opt}"
+              onclick="selectOption(this, '${opt.replace(/'/g, "\\'")}')">
+              <div class="option-radio" aria-hidden="true"></div>
+              <span class="option-text">${opt}</span>
+            </button>`
+          ).join('') + '</div>';
+      }
+
+      document.getElementById('exerciseContent').innerHTML = `
+        <div class="question-card fade-in">
+          <div class="question-number" tabindex="0">Exercise ${currentIndex + 1} of ${exercises.length}</div>
+          ${typeBadge}
+          ${buildImageBlock(ex)}
+          <div class="question-text" tabindex="0">${ex.question}</div>
+          ${interactionHtml}
+        </div>
+        <div id="feedbackArea" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div class="vocab-nav">
+          <button class="btn btn-ghost" onclick="prevExercise()" ${currentIndex === 0 ? 'disabled' : ''}>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Previous
+          </button>
+          <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()" style="flex:1;">Check Answer</button>
+        </div>`;
+
+      document.getElementById('vocabTitle')?.focus();
+    }
+
+    function selectOption(el, value) {
+      document.querySelectorAll('.option-item').forEach(o => {
+        o.classList.remove('selected');
+        o.setAttribute('aria-pressed', 'false');
+      });
+      el.classList.add('selected');
+      el.setAttribute('aria-pressed', 'true');
+    }
+
+    function checkAnswer() {
+      const ex = exercises[currentIndex];
+      const type = ex.exercise_type || 'image_choice';
+
+      if (type === 'image_describe') {
+        checkDescribeAnswer(ex);
+        return;
+      }
+
+      const selected = document.querySelector('.option-item.selected');
+      if (!selected) {
+        showFeedback(false, 'Select an answer before checking.', true);
+        return;
+      }
+
+      const answer = selected.dataset.value;
+      const isCorrect = answer === ex.correct_answer;
+
+      document.querySelectorAll('.option-item').forEach(opt => {
+        opt.disabled = true;
+        if (opt.dataset.value === ex.correct_answer) opt.classList.add('correct');
+        else if (opt.classList.contains('selected') && !isCorrect) opt.classList.add('incorrect');
+      });
+
+      if (isCorrect) correctAnswers++; else incorrectAnswers++;
+      updateStats();
+      showFeedback(isCorrect, ex.explanation || (isCorrect ? 'Correct!' : 'The correct answer is: ' + ex.correct_answer));
+
+      if (currentUser && ex.id && !ex.id.toString().startsWith('fb')) {
+        saveProgress(currentUser.id, ex.id, isCorrect, answer).catch(() => {});
+      }
+    }
+
+    function checkDescribeAnswer(ex) {
+      const textarea = document.getElementById('describeInput');
+      const userText = textarea ? textarea.value.trim() : '';
+      if (!userText) {
+        showFeedback(false, 'Please write a description before checking.', true);
+        textarea?.focus();
+        return;
+      }
+
+      if (textarea) textarea.disabled = true;
+      const keywords = (ex.correct_answer || '').toLowerCase().split(/[,\s]+/).filter(k => k.length > 2);
+      const lower = userText.toLowerCase();
+      const matched = keywords.filter(k => lower.includes(k)).length;
+      const total = keywords.length;
+      const isCorrect = total > 0 && matched / total >= 0.4;
+
+      if (isCorrect) correctAnswers++; else incorrectAnswers++;
+      updateStats();
+
+      const matchedWords = keywords.filter(k => lower.includes(k));
+      const missedWords = keywords.filter(k => !lower.includes(k));
+      let extra = `<p class="describe-score" style="margin-top:.5rem;font-size:.875rem;color:var(--text-secondary);">`;
+      extra += `Key words found: <strong>${matchedWords.join(', ') || 'none'}</strong>.`;
+      if (missedWords.length) extra += ` Try also: <em>${missedWords.join(', ')}</em>.`;
+      extra += `</p>`;
+
+      showFeedback(isCorrect, (ex.explanation || (isCorrect ? 'Great description!' : 'Try to include more key words.')) + extra);
+
+      if (currentUser && ex.id && !ex.id.toString().startsWith('fb')) {
+        saveProgress(currentUser.id, ex.id, isCorrect, userText.slice(0, 200)).catch(() => {});
+      }
+    }
+
+    function showFeedback(isCorrect, message, isWarning) {
+      const feedbackArea = document.getElementById('feedbackArea');
+      feedbackArea.innerHTML = `
+        <div id="answerFeedback" class="feedback-box ${isWarning ? 'incorrect' : isCorrect ? 'correct' : 'incorrect'}"
+             style="margin-top:1rem;" role="group" tabindex="-1">
+          <div class="feedback-title">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              ${isWarning
+                ? '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'
+                : isCorrect
+                  ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'
+                  : '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>'}
+            </svg>
+            ${isWarning ? 'Notice' : isCorrect ? 'Correct!' : 'Incorrect'}
+          </div>
+          <p class="feedback-text">${message}</p>
+        </div>`;
+
+      const checkBtn = document.getElementById('checkBtn');
+      if (checkBtn && !isWarning) {
+        checkBtn.textContent = 'Next Exercise';
+        checkBtn.onclick = nextExercise;
+      }
+      document.getElementById('answerFeedback')?.focus();
+    }
+
+    function updateStats() {
+      document.getElementById('correctCount').textContent = correctAnswers;
+      document.getElementById('incorrectCount').textContent = incorrectAnswers;
+    }
+
+    function nextExercise() {
+      currentIndex++;
+      renderExercise();
+    }
+
+    function prevExercise() {
+      if (currentIndex > 0) { currentIndex--; renderExercise(); }
+    }
+
+    function showResults() {
+      const total = exercises.length;
+      const pct = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+      document.getElementById('exerciseContent').innerHTML = `
+        <div class="question-card fade-in" style="text-align:center;">
+          <div style="font-size:4rem;margin-bottom:1rem;" aria-hidden="true">${pct >= 70 ? '🎉' : '📚'}</div>
+          <h2 tabindex="-1" style="margin-bottom:1rem;">Vocabulary Complete!</h2>
+          <div class="vocab-stat-value green" style="font-size:3rem;margin-bottom:1rem;" aria-label="Score: ${pct} percent">${pct}%</div>
+          <p style="color:var(--text-secondary);margin-bottom:2rem;">You got ${correctAnswers} out of ${total} correct</p>
+          <div class="vocab-nav">
+            <button class="btn btn-outline" onclick="restart()">Try Again</button>
+            <a href="dashboard.html" class="btn btn-primary">Back to Dashboard</a>
+          </div>
+        </div>`;
+      document.getElementById('progressText').textContent = '100%';
+      document.getElementById('progressFill').style.width = '100%';
+    }
+
+    function restart() {
+      currentIndex = 0;
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      updateStats();
+      renderExercise();
+    }
+
+    async function handleLogout() {
+      await signOut();
+      window.location.href = 'index.html';
+    }
+
+    init();
+  </script>
+</body>
+</html>
