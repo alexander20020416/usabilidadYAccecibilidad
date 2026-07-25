@@ -2043,6 +2043,11 @@ body {
   transform: scale(1.015);
 }
 
+.exercise-image:focus-visible {
+  outline: 4px solid #1E293B;
+  outline-offset: 4px;
+}
+
 /* Accessible error state when image fails to load */
 .img-error {
   display: flex;
