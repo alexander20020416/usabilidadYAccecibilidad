@@ -441,6 +441,69 @@ body {
   color: var(--success);
 }
 
+/* ===== FEATURE CARD: VIDEO VARIANT ===== */
+
+/* Cards that contain a video get a slightly taller layout */
+.feature-card--video {
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.feature-card--video h3 {
+  margin-top: 1rem;
+}
+
+/* Figure wrapper — no extra margin, the iframe handles spacing */
+.feature-video-figure {
+  margin: 0.5rem 0 0 0;
+  padding: 0;
+}
+
+/* 16:9 responsive container */
+.feature-video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: #0f0f0f;
+  box-shadow: var(--shadow-md);
+}
+
+.feature-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: var(--radius-lg);
+  object-fit: contain;
+  background: #000;
+}
+
+/* Accessible visible caption below every video */
+.feature-video-caption {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* Stop the card lift animation from fighting the iframe */
+.feature-card--video:hover {
+  transform: translateY(-4px);
+}
+
+/* On very narrow screens stack the grid and shrink padding */
+@media (max-width: 768px) {
+  .feature-card--video {
+    padding: 1.25rem;
+  }
+}
+
 /* ===== FOOTER ===== */
 .footer {
   background: var(--bg-dark);

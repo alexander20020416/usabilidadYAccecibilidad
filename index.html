@@ -47,27 +47,81 @@
   </section>
 
   <section class="hero-features" id="features" aria-label="Platform features">
-    <div class="feature-card slide-up">
+    <div class="feature-card feature-card--video slide-up">
       <span class="feature-tag tag-purple">Games</span>
-      <div class="feature-icon purple" aria-hidden="true">
-        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-      </div>
+
+      <!-- 🎬 Video 1: BBC Learning English – Fun vocabulary game -->
+      <figure class="feature-video-figure">
+        <div class="feature-video-wrapper">
+          <video
+            id="video-games"
+            class="feature-video"
+            controls
+            preload="metadata"
+            aria-label="BBC Learning English: Fun English vocabulary game – learn English words by playing"
+          >
+            <source src="videos/Learnandplay.mp4" type="video/mp4">
+            <track kind="subtitles" src="videos/LearnAndPlay.vtt" srclang="es" label="Español">
+          </video>
+        </div>
+        <figcaption class="feature-video-caption">
+          Watch a fun vocabulary game to practice English words. Subtítulos en español disponibles.
+        </figcaption>
+      </figure>
+
       <h3>Learn and Play</h3>
       <p>Fun games to practice English vocabulary and grammar while having fun.</p>
     </div>
-    <a href="login.html?mode=signup" class="feature-card slide-up" style="animation-delay: 0.1s; text-decoration: none; color: inherit;">
+
+    <div class="feature-card feature-card--video slide-up" style="animation-delay: 0.1s">
       <span class="feature-tag tag-orange">Assessment</span>
-      <div class="feature-icon orange" aria-hidden="true">
-        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      </div>
+
+      <!-- 🎬 Video 2: Cambridge English – What level are you? CEFR explained -->
+      <figure class="feature-video-figure">
+        <div class="feature-video-wrapper">
+          <video
+            id="video-assessment"
+            class="feature-video"
+            controls
+            preload="metadata"
+            aria-label="Cambridge English: How to find your English level – A1 to C2 CEFR guide with subtitles"
+          >
+            <source src="videos/DiagnosticTest.mp4" type="video/mp4">
+            <track kind="subtitles" src="videos/DiagnosticTest.vtt" srclang="es" label="Español">
+          </video>
+        </div>
+        <figcaption class="feature-video-caption">
+          Understand the CEFR English levels (A1–C2) and find out where you stand. Subtítulos en español disponibles.
+        </figcaption>
+      </figure>
+
       <h3>Diagnostic Test</h3>
       <p>Discover your current English level and get a personalized learning plan.</p>
-    </a>
-    <div class="feature-card slide-up" style="animation-delay: 0.2s">
+      <a href="login.html?mode=signup" class="btn btn-primary btn-sm" style="margin-top: 1rem;">Start Assessment</a>
+    </div>
+
+    <div class="feature-card feature-card--video slide-up" style="animation-delay: 0.2s">
       <span class="feature-tag tag-green">Resources</span>
-      <div class="feature-icon green" aria-hidden="true">
-        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-      </div>
+
+      <!-- 🎬 Video 3: TED-Ed – How to learn any language in 6 months -->
+      <figure class="feature-video-figure">
+        <div class="feature-video-wrapper">
+          <iframe
+            id="video-resources"
+            class="feature-video"
+            src="https://www.youtube.com/embed/d0yGdNEWdn0?cc_load_policy=1&cc_lang_pref=es&rel=0&modestbranding=1&hl=es"
+            title="TEDx: How to learn any language in six months – Chris Lonsdale, with Spanish subtitles"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+        <figcaption class="feature-video-caption">
+          Learn proven strategies to pick up any language quickly and effectively. Subtítulos en español disponibles en YouTube.
+        </figcaption>
+      </figure>
+
       <h3>Discover More</h3>
       <p>Explore additional resources, tips, and learning materials.</p>
     </div>
