@@ -119,6 +119,40 @@
     .vocab-fallback {
       display: none;
     }
+
+    /* ── Module tabs ── */
+    .vocab-tabs {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .vocab-tab {
+      padding: 10px 24px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .vocab-tab:hover {
+      border-color: var(--primary-light);
+      color: var(--primary);
+    }
+    .vocab-tab.active {
+      background: var(--primary-gradient);
+      color: white;
+      border-color: transparent;
+    }
+    .vocab-tab:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 2px;
+    }
+
     @media (max-width: 600px) {
       .vocab-container { padding: 1rem; }
       .vocab-stats { gap: 1rem; }
@@ -163,6 +197,11 @@
         <p>Look at the images and answer the questions to build your vocabulary.</p>
       </div>
 
+      <div class="vocab-tabs" role="tablist" aria-label="Vocabulary exercise type">
+        <button class="vocab-tab active" role="tab" aria-selected="true" id="tabChoice" onclick="switchModule('choice')">Multiple Choice</button>
+        <button class="vocab-tab" role="tab" aria-selected="false" id="tabDescribe" onclick="switchModule('describe')">Describe the Image</button>
+      </div>
+
       <div class="vocab-stats" id="vocabStats" role="status" aria-live="polite">
         <div class="vocab-stat">
           <div class="vocab-stat-value green" id="correctCount">0</div>
@@ -203,6 +242,7 @@
     let currentIndex = 0;
     let correctAnswers = 0;
     let incorrectAnswers = 0;
+    let currentModule = 'choice';
 
     const FALLBACK_EXERCISES = [
       {
@@ -328,6 +368,119 @@
       }
     ];
 
+    const DESCRIBE_EXERCISES = [
+      {
+        id: 'desc1', module: 'vocabulary', title: 'Describe the Scene – Park',
+        question: 'Look at the image carefully. Write a sentence describing what you see. Try to use words like: people, park, trees, walking, green.',
+        options: [],
+        correct_answer: 'park people trees green walking',
+        explanation: 'Great! A model sentence: "People are walking in a green park surrounded by trees." Key words: park, people, trees, walking, green.',
+        difficulty: 'medium', order_index: 33,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'Families and people walking through a green park with tall trees on a sunny day'
+      },
+      {
+        id: 'desc2', module: 'vocabulary', title: 'Describe the Scene – Kitchen',
+        question: 'Look at the image. Describe what you see. Try to use words like: kitchen, cooking, stove, food.',
+        options: [],
+        correct_answer: 'kitchen cooking food stove',
+        explanation: 'Well done! A model sentence: "A person is cooking food on the stove in a modern kitchen." Key words: kitchen, cooking, stove, food.',
+        difficulty: 'medium', order_index: 34,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A person cooking food on a stove in a bright modern kitchen'
+      },
+      {
+        id: 'desc3', module: 'vocabulary', title: 'Describe the Scene – Beach',
+        question: 'Look at the image. Write a sentence about what you see. Try to use words like: sea, sand, waves, people, summer, blue.',
+        options: [],
+        correct_answer: 'sea sand beach waves blue summer',
+        explanation: 'Excellent! A model sentence: "People are relaxing on the sand near the blue sea with waves." Key words: beach, sea, sand, waves.',
+        difficulty: 'hard', order_index: 35,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A beautiful beach with clear blue water, white sand, and gentle waves on a sunny day'
+      },
+      {
+        id: 'desc4', module: 'vocabulary', title: 'Describe the Scene – City',
+        question: 'Look at the image. Describe the city scene. Try to use words like: buildings, street, people, busy, tall, walking.',
+        options: [],
+        correct_answer: 'city buildings street people busy walking tall',
+        explanation: 'Great work! A model description: "People are walking on a busy city street surrounded by tall buildings." Key words: city, buildings, street.',
+        difficulty: 'hard', order_index: 36,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A busy city street with tall buildings, cars, and many people walking on the sidewalk'
+      },
+      {
+        id: 'desc5', module: 'vocabulary', title: 'Describe the Scene – Classroom',
+        question: 'Look at the image. Write 1–2 sentences describing what you see. Try to use words like: students, teacher, classroom, desks, learning, board.',
+        options: [],
+        correct_answer: 'students classroom desks teacher learning board',
+        explanation: 'Excellent! A model answer: "Students are sitting at desks in a classroom while the teacher writes on the board." Key words: students, classroom, desks.',
+        difficulty: 'hard', order_index: 37,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A classroom with students sitting at desks and a teacher standing near a whiteboard'
+      },
+      {
+        id: 'desc6', module: 'vocabulary', title: 'Describe the Scene – Sunset',
+        question: 'Look at the image. Describe the sunset scene. Try to use words like: sunset, sky, clouds, orange, beautiful, colors.',
+        options: [],
+        correct_answer: 'sunset sky clouds orange beautiful colors',
+        explanation: 'Wonderful! A model sentence: "The sky is full of orange and pink colors during a beautiful sunset." Key words: sunset, sky, clouds, orange, beautiful.',
+        difficulty: 'medium', order_index: 38,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A stunning sunset with orange and purple clouds over a field of wheat'
+      },
+      {
+        id: 'desc7', module: 'vocabulary', title: 'Describe the Scene – Farmers Market',
+        question: 'Look at the image. Describe the market scene. Try to use words like: market, fruits, vegetables, people, selling, fresh.',
+        options: [],
+        correct_answer: 'market fruits vegetables people selling fresh',
+        explanation: 'Great description! A model sentence: "People are selling fresh fruits and vegetables at the market." Key words: market, fruits, vegetables, people, selling.',
+        difficulty: 'medium', order_index: 39,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A colorful farmers market with fresh fruits and vegetables on display'
+      },
+      {
+        id: 'desc8', module: 'vocabulary', title: 'Describe the Scene – Office',
+        question: 'Look at the image. Describe the office environment. Try to use words like: office, people, working, computers, desk, meeting.',
+        options: [],
+        correct_answer: 'office people working computers desk meeting',
+        explanation: 'Nice work! A model sentence: "People are working at their desks with computers in a modern office." Key words: office, people, working, computers, desk.',
+        difficulty: 'hard', order_index: 40,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A modern office with people working at desks with computers and large windows'
+      },
+      {
+        id: 'desc9', module: 'vocabulary', title: 'Describe the Scene – Garden',
+        question: 'Look at the image. Describe the garden scene. Try to use words like: garden, flowers, colorful, plants, nature, beautiful.',
+        options: [],
+        correct_answer: 'garden flowers colorful plants nature beautiful',
+        explanation: 'Excellent! A model sentence: "The garden is full of colorful flowers and green plants." Key words: garden, flowers, colorful, plants, nature.',
+        difficulty: 'easy', order_index: 41,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A beautiful garden with colorful flowers in bloom under the sunlight'
+      },
+      {
+        id: 'desc10', module: 'vocabulary', title: 'Describe the Scene – Rainy Street',
+        question: 'Look at the image. Describe the rainy scene. Try to use words like: rain, street, umbrella, wet, walking, city.',
+        options: [],
+        correct_answer: 'rain street umbrella wet walking city',
+        explanation: 'Great job! A model sentence: "People are walking on a wet city street with umbrellas in the rain." Key words: rain, street, umbrella, wet, walking.',
+        difficulty: 'medium', order_index: 42,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1519692933481-e162a57d6721?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A rainy city street with people walking under umbrellas and colorful lights reflecting on the wet pavement'
+      }
+    ];
+
     function speakText(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
@@ -370,6 +523,37 @@
         </figure>`;
     }
 
+    function getModuleExercises(moduleType) {
+      if (moduleType === 'describe') {
+        return DESCRIBE_EXERCISES;
+      }
+      return FALLBACK_EXERCISES;
+    }
+
+    function switchModule(moduleType) {
+      currentModule = moduleType;
+      currentIndex = 0;
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      exercises = getModuleExercises(moduleType);
+      updateStats();
+      document.querySelectorAll('.vocab-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      const tabId = moduleType === 'describe' ? 'tabDescribe' : 'tabChoice';
+      const tab = document.getElementById(tabId);
+      if (tab) {
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+      }
+      document.getElementById('vocabTitle').textContent = moduleType === 'describe' ? 'Describe the Image' : 'Visual Vocabulary';
+      document.querySelector('.vocab-header p').textContent = moduleType === 'describe'
+        ? 'Look at each image and write a sentence describing what you see.'
+        : 'Look at the images and answer the questions to build your vocabulary.';
+      renderExercise();
+    }
+
     async function init() {
       currentUser = await getUser();
       if (!currentUser) { window.location.href = 'login.html'; return; }
@@ -378,25 +562,7 @@
       document.getElementById('userAvatar').textContent = initials;
       document.getElementById('userName').textContent = currentUser.email;
 
-      try {
-        const dbExercises = await getExercises('vocabulary', null);
-        if (dbExercises && dbExercises.length > 0) {
-          const visual = dbExercises.filter(e => e.image_url && (e.exercise_type === 'image_choice' || e.exercise_type === 'image_describe'));
-          exercises = visual.length > 0 ? visual : FALLBACK_EXERCISES;
-        } else {
-          exercises = FALLBACK_EXERCISES;
-        }
-      } catch {
-        exercises = FALLBACK_EXERCISES;
-      }
-
-      if (exercises.length === 0) {
-        document.getElementById('exerciseContent').innerHTML =
-          '<div class="question-card fade-in" style="text-align:center;padding:3rem;"><p>No exercises available yet.</p></div>';
-        return;
-      }
-
-      renderExercise();
+      switchModule('choice');
     }
 
     function renderExercise() {
@@ -573,14 +739,16 @@
     function showResults() {
       const total = exercises.length;
       const pct = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+      const moduleName = currentModule === 'describe' ? 'Describe the Image' : 'Visual Vocabulary';
       document.getElementById('exerciseContent').innerHTML = `
         <div class="question-card fade-in" style="text-align:center;">
           <div style="font-size:4rem;margin-bottom:1rem;" aria-hidden="true">${pct >= 70 ? '🎉' : '📚'}</div>
-          <h2 tabindex="-1" style="margin-bottom:1rem;">Vocabulary Complete!</h2>
+          <h2 tabindex="-1" style="margin-bottom:1rem;">${moduleName} Complete!</h2>
           <div class="vocab-stat-value green" style="font-size:3rem;margin-bottom:1rem;" aria-label="Score: ${pct} percent">${pct}%</div>
           <p style="color:var(--text-secondary);margin-bottom:2rem;">You got ${correctAnswers} out of ${total} correct</p>
           <div class="vocab-nav">
-            <button class="btn btn-outline" onclick="restart()">Try Again</button>
+            <button class="btn btn-outline" onclick="switchModule('${currentModule}')">Try Again</button>
+            <button class="btn btn-ghost" onclick="switchModule(currentModule === 'describe' ? 'choice' : 'describe')">Switch to ${currentModule === 'describe' ? 'Multiple Choice' : 'Describe the Image'}</button>
             <a href="dashboard.html" class="btn btn-primary">Back to Dashboard</a>
           </div>
         </div>`;
@@ -589,11 +757,7 @@
     }
 
     function restart() {
-      currentIndex = 0;
-      correctAnswers = 0;
-      incorrectAnswers = 0;
-      updateStats();
-      renderExercise();
+      switchModule(currentModule);
     }
 
     async function handleLogout() {
