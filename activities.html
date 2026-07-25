@@ -75,21 +75,21 @@
           </div>
         </div>
 
-        <div class="stats-sidebar" role="region" aria-label="Session statistics" aria-live="polite" tabindex="0">
+        <div class="stats-sidebar" role="region" aria-label="Session statistics" aria-live="polite">
           <h3>
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
             Stats
           </h3>
-          <div class="stat-row">
-            <span class="stat-label">Correct Answers</span>
+          <div class="stat-row" role="group" tabindex="0" aria-labelledby="correctAnswersLabel correctCount">
+            <span class="stat-label" id="correctAnswersLabel">Correct Answers</span>
             <span class="stat-number green" id="correctCount">0</span>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">Incorrect Answers</span>
+          <div class="stat-row" role="group" tabindex="0" aria-labelledby="incorrectAnswersLabel incorrectCount">
+            <span class="stat-label" id="incorrectAnswersLabel">Incorrect Answers</span>
             <span class="stat-number red" id="incorrectCount">0</span>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">Practice Grade</span>
+          <div class="stat-row" role="group" tabindex="0" aria-labelledby="practiceGradeLabel practiceGrade">
+            <span class="stat-label" id="practiceGradeLabel">Practice Grade</span>
             <span class="stat-number" style="color: var(--primary);" id="practiceGrade">--</span>
           </div>
         </div>
