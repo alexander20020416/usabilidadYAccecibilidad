@@ -20,7 +20,7 @@
     <ul class="nav-links">
       <li><a href="dashboard.html">Home</a></li>
       <li><a href="activities.html" class="active" aria-current="page">Activities</a></li>
-      <li><a href="vocabulary.html">Vocabulary</a></li>
+      <li><a href="activities.html?module=vocabulary">Vocabulary</a></li>
       <li><a href="progress.html">Progress</a></li>
       <li><a href="speaking.html">Speaking</a></li>
       <li><a href="grammar.html">Writing</a></li>
@@ -52,9 +52,9 @@
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
             Vocabulary
           </a></li>
-          <li><a href="vocabulary.html">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            Visual Vocabulary
+          <li><a href="#" data-module="describe" onclick="loadModule('describe', this); return false;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            Describe
           </a></li>
           <li><a href="#" data-module="writing" onclick="loadModule('writing', this); return false;">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -109,6 +109,243 @@
     let incorrectAnswers = 0;
     let userLevel = 'A1';
     let hasRenderedInitialExercise = false;
+
+    const FALLBACK_CHOICE_EXERCISES = [
+      {
+        id: 'fb1', module: 'vocabulary', title: 'Visual Vocab – Fruits',
+        question: 'Look at the image. What object do you see?',
+        options: ['An apple', 'A banana', 'An orange', 'A mango'],
+        correct_answer: 'An apple',
+        explanation: 'This is an apple. Apples are round fruits that are typically red, green, or yellow.',
+        difficulty: 'easy', order_index: 20,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A shiny red apple on a white background'
+      },
+      {
+        id: 'fb2', module: 'vocabulary', title: 'Visual Vocab – Animals',
+        question: 'Look at the image. What animal is this?',
+        options: ['A dog', 'A cat', 'A rabbit', 'A mouse'],
+        correct_answer: 'A cat',
+        explanation: 'This is a cat. Cats are common household pets known for being independent and agile.',
+        difficulty: 'easy', order_index: 21,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A fluffy orange cat sitting and looking at the camera'
+      },
+      {
+        id: 'fb3', module: 'vocabulary', title: 'Visual Vocab – Places',
+        question: 'Look at the image. What place is this?',
+        options: ['A hospital', 'A library', 'A restaurant', 'A school'],
+        correct_answer: 'A library',
+        explanation: 'This is a library. A library is a place where books and other resources are kept for people to read or borrow.',
+        difficulty: 'medium', order_index: 22,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'Rows of bookshelves filled with books inside a large library'
+      },
+      {
+        id: 'fb4', module: 'vocabulary', title: 'Visual Vocab – Weather',
+        question: 'Look at the image. What is the weather like?',
+        options: ['It is raining', 'It is cloudy', 'It is sunny', 'It is snowing'],
+        correct_answer: 'It is sunny',
+        explanation: 'The image shows a bright, clear sky with sunshine. We say the weather is sunny.',
+        difficulty: 'easy', order_index: 23,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A bright blue sky with the sun shining over a mountain landscape'
+      },
+      {
+        id: 'fb5', module: 'vocabulary', title: 'Visual Vocab – Transport',
+        question: 'Look at the image. What is this vehicle called?',
+        options: ['A motorcycle', 'A bicycle', 'A scooter', 'A tricycle'],
+        correct_answer: 'A bicycle',
+        explanation: 'This is a bicycle (also called a bike). It is a human-powered vehicle with two wheels.',
+        difficulty: 'easy', order_index: 24,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A red bicycle parked against a brick wall'
+      },
+      {
+        id: 'fb6', module: 'vocabulary', title: 'Visual Vocab – Food',
+        question: 'Look at the image. What food is this?',
+        options: ['Pasta', 'A burger', 'Pizza', 'A sandwich'],
+        correct_answer: 'Pizza',
+        explanation: 'This is a pizza. Pizza is an Italian dish with a flat dough base topped with tomato sauce, cheese, and various toppings.',
+        difficulty: 'easy', order_index: 25,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A freshly baked pizza with melted cheese and vegetables on top'
+      },
+      {
+        id: 'fb7', module: 'vocabulary', title: 'Visual Vocab – Professions',
+        question: 'Look at the image. What is this person\'s profession?',
+        options: ['A teacher', 'A chef', 'A doctor', 'An engineer'],
+        correct_answer: 'A doctor',
+        explanation: 'This is a doctor. Doctors are medical professionals who diagnose and treat illnesses and injuries.',
+        difficulty: 'medium', order_index: 26,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A doctor in a white coat holding a stethoscope'
+      },
+      {
+        id: 'fb8', module: 'vocabulary', title: 'Visual Vocab – Emotions',
+        question: 'Look at the image. Which emotion does this person show?',
+        options: ['Sad', 'Angry', 'Surprised', 'Happy'],
+        correct_answer: 'Happy',
+        explanation: 'The person in the image is smiling, which shows they are happy.',
+        difficulty: 'easy', order_index: 27,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A smiling person with a bright and joyful expression'
+      },
+      {
+        id: 'fb9', module: 'vocabulary', title: 'Visual Vocab – Nature',
+        question: 'Look at the image. What natural feature can you see?',
+        options: ['A river', 'A desert', 'A forest', 'A mountain'],
+        correct_answer: 'A mountain',
+        explanation: 'This is a mountain. A mountain is a large natural elevation of the earth\'s surface.',
+        difficulty: 'easy', order_index: 28,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A snow-capped mountain peak against a blue sky'
+      },
+      {
+        id: 'fb10', module: 'vocabulary', title: 'Visual Vocab – Actions',
+        question: 'Look at the image. What action is the person performing?',
+        options: ['Reading a book', 'Writing an email', 'Painting a picture', 'Playing chess'],
+        correct_answer: 'Reading a book',
+        explanation: 'The person is reading a book. "Read" is the verb; "reading" is the present participle.',
+        difficulty: 'medium', order_index: 29,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A person sitting comfortably and reading a book'
+      },
+      {
+        id: 'fb11', module: 'vocabulary', title: 'Visual Vocab – Home',
+        question: 'Look at the image. What room of the house is this?',
+        options: ['The bedroom', 'The bathroom', 'The living room', 'The dining room'],
+        correct_answer: 'The living room',
+        explanation: 'This is a living room. It usually has a sofa, chairs, and a TV.',
+        difficulty: 'easy', order_index: 32,
+        exercise_type: 'image_choice',
+        image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A cozy living room with a sofa, coffee table, plants, and soft lighting'
+      }
+    ];
+
+    const DESCRIBE_EXERCISES = [
+      {
+        id: 'desc1', module: 'describe', title: 'Describe the Scene – Park',
+        question: 'Look at the image carefully. Write a sentence describing what you see. Try to use words like: people, park, trees, walking, green.',
+        options: [],
+        correct_answer: 'park people trees green walking',
+        explanation: 'Great! A model sentence: "People are walking in a green park surrounded by trees." Key words: park, people, trees, walking, green.',
+        difficulty: 'medium', order_index: 1,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'Families and people walking through a green park with tall trees on a sunny day'
+      },
+      {
+        id: 'desc2', module: 'describe', title: 'Describe the Scene – Kitchen',
+        question: 'Look at the image. Describe what you see. Try to use words like: kitchen, cooking, stove, food.',
+        options: [],
+        correct_answer: 'kitchen cooking food stove',
+        explanation: 'Well done! A model sentence: "A person is cooking food on the stove in a modern kitchen." Key words: kitchen, cooking, stove, food.',
+        difficulty: 'medium', order_index: 2,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A person cooking food on a stove in a bright modern kitchen'
+      },
+      {
+        id: 'desc3', module: 'describe', title: 'Describe the Scene – Beach',
+        question: 'Look at the image. Write a sentence about what you see. Try to use words like: sea, sand, waves, people, summer, blue.',
+        options: [],
+        correct_answer: 'sea sand beach waves blue summer',
+        explanation: 'Excellent! A model sentence: "People are relaxing on the sand near the blue sea with waves." Key words: beach, sea, sand, waves.',
+        difficulty: 'hard', order_index: 3,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A beautiful beach with clear blue water, white sand, and gentle waves on a sunny day'
+      },
+      {
+        id: 'desc4', module: 'describe', title: 'Describe the Scene – City',
+        question: 'Look at the image. Describe the city scene. Try to use words like: buildings, street, people, busy, tall, walking.',
+        options: [],
+        correct_answer: 'city buildings street people busy walking tall',
+        explanation: 'Great work! A model description: "People are walking on a busy city street surrounded by tall buildings." Key words: city, buildings, street.',
+        difficulty: 'hard', order_index: 4,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A busy city street with tall buildings, cars, and many people walking on the sidewalk'
+      },
+      {
+        id: 'desc5', module: 'describe', title: 'Describe the Scene – Classroom',
+        question: 'Look at the image. Write 1–2 sentences describing what you see. Try to use words like: students, teacher, classroom, desks, learning, board.',
+        options: [],
+        correct_answer: 'students classroom desks teacher learning board',
+        explanation: 'Excellent! A model answer: "Students are sitting at desks in a classroom while the teacher writes on the board." Key words: students, classroom, desks.',
+        difficulty: 'hard', order_index: 5,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A classroom with students sitting at desks and a teacher standing near a whiteboard'
+      },
+      {
+        id: 'desc6', module: 'describe', title: 'Describe the Scene – Sunset',
+        question: 'Look at the image. Describe the sunset scene. Try to use words like: sunset, sky, clouds, orange, beautiful, colors.',
+        options: [],
+        correct_answer: 'sunset sky clouds orange beautiful colors',
+        explanation: 'Wonderful! A model sentence: "The sky is full of orange and pink colors during a beautiful sunset." Key words: sunset, sky, clouds, orange, beautiful.',
+        difficulty: 'medium', order_index: 6,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A stunning sunset with orange and purple clouds over a field of wheat'
+      },
+      {
+        id: 'desc7', module: 'describe', title: 'Describe the Scene – Market',
+        question: 'Look at the image. Describe the market scene. Try to use words like: market, fruits, vegetables, people, selling, fresh.',
+        options: [],
+        correct_answer: 'market fruits vegetables people selling fresh',
+        explanation: 'Great description! A model sentence: "People are selling fresh fruits and vegetables at the market." Key words: market, fruits, vegetables, people, selling.',
+        difficulty: 'medium', order_index: 7,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A colorful farmers market with fresh fruits and vegetables on display'
+      },
+      {
+        id: 'desc8', module: 'describe', title: 'Describe the Scene – Office',
+        question: 'Look at the image. Describe the office environment. Try to use words like: office, people, working, computers, desk, meeting.',
+        options: [],
+        correct_answer: 'office people working computers desk meeting',
+        explanation: 'Nice work! A model sentence: "People are working at their desks with computers in a modern office." Key words: office, people, working, computers, desk.',
+        difficulty: 'hard', order_index: 8,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A modern office with people working at desks with computers and large windows'
+      },
+      {
+        id: 'desc9', module: 'describe', title: 'Describe the Scene – Garden',
+        question: 'Look at the image. Describe the garden scene. Try to use words like: garden, flowers, colorful, plants, nature, beautiful.',
+        options: [],
+        correct_answer: 'garden flowers colorful plants nature beautiful',
+        explanation: 'Excellent! A model sentence: "The garden is full of colorful flowers and green plants." Key words: garden, flowers, colorful, plants, nature.',
+        difficulty: 'easy', order_index: 9,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A beautiful garden with colorful flowers in bloom under the sunlight'
+      },
+      {
+        id: 'desc10', module: 'describe', title: 'Describe the Scene – Rainy Street',
+        question: 'Look at the image. Describe the rainy scene. Try to use words like: rain, street, umbrella, wet, walking, city.',
+        options: [],
+        correct_answer: 'rain street umbrella wet walking city',
+        explanation: 'Great job! A model sentence: "People are walking on a wet city street with umbrellas in the rain." Key words: rain, street, umbrella, wet, walking.',
+        difficulty: 'medium', order_index: 10,
+        exercise_type: 'image_describe',
+        image_url: 'https://images.unsplash.com/photo-1519692933481-e162a57d6721?w=600&q=80&auto=format&fit=crop',
+        image_alt: 'A rainy city street with people walking under umbrellas and colorful lights reflecting on the wet pavement'
+      }
+    ];
 
     // ── Speech Synthesis helper ───────────────────────────────────
     function speakText(text) {
@@ -212,12 +449,22 @@
       hasRenderedInitialExercise = false;
       updateStats();
 
-      const titles = { grammar: 'Grammar Exercises', vocabulary: 'Vocabulary Exercises', writing: 'Writing Exercises' };
+      const titles = { grammar: 'Grammar Exercises', vocabulary: 'Vocabulary Exercises', writing: 'Writing Exercises', describe: 'Describe the Image' };
       document.getElementById('moduleTitle').textContent = titles[module] || 'Exercises';
 
       try {
+        if (module === 'describe') {
+          exercises = DESCRIBE_EXERCISES;
+          renderExercise();
+          return;
+        }
         exercises = await getExercises(module, userLevel);
         if (exercises.length === 0) {
+          if (module === 'vocabulary') {
+            exercises = FALLBACK_CHOICE_EXERCISES;
+            renderExercise();
+            return;
+          }
           document.getElementById('exerciseContent').innerHTML =
             '<div style="text-align:center;padding:3rem;color:var(--text-secondary);"><p>No exercises available yet for this module.</p></div>';
           document.getElementById('questionCounter').textContent = 'No exercises';

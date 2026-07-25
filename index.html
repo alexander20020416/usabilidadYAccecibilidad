@@ -106,19 +106,19 @@
       <!-- 🎬 Video 3: TED-Ed – How to learn any language in 6 months -->
       <figure class="feature-video-figure">
         <div class="feature-video-wrapper">
-          <iframe
+          <video
             id="video-resources"
             class="feature-video"
-            src="https://www.youtube.com/embed/d0yGdNEWdn0?cc_load_policy=1&cc_lang_pref=es&rel=0&modestbranding=1&hl=es"
-            title="TEDx: How to learn any language in six months – Chris Lonsdale, with Spanish subtitles"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy"
-            referrerpolicy="strict-origin-when-cross-origin"
-          ></iframe>
+            controls
+            preload="metadata"
+            aria-label="TEDx: How to learn any language in six months – Chris Lonsdale, with subtitles"
+          >
+            <source src="videos/Resourses.mp4" type="video/mp4">
+            <track kind="subtitles" src="videos/Resourses.vtt" srclang="es" label="Español">
+          </video>
         </div>
         <figcaption class="feature-video-caption">
-          Learn proven strategies to pick up any language quickly and effectively. Subtítulos en español disponibles en YouTube.
+          Learn proven strategies to pick up any language quickly and effectively. Subtítulos en español disponibles.
         </figcaption>
       </figure>
 
