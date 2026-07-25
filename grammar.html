@@ -65,25 +65,25 @@
 
         <div id="screenReaderAnnounce" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
 
-        <div class="stats-sidebar" aria-label="Session statistics">
+        <div class="stats-sidebar" role="region" aria-label="Session statistics" aria-live="polite">
           <h3>
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
             Stats
           </h3>
-          <div class="stat-row">
-            <span class="stat-label">Your Session</span>
+          <div class="stat-row" role="group" tabindex="0" aria-labelledby="sessionTotalLabel sessionTotal">
+            <span class="stat-label" id="sessionTotalLabel">Your Session</span>
             <span class="stat-number" style="color: var(--primary);" id="sessionTotal">0</span>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">Correct</span>
+          <div class="stat-row" role="group" tabindex="0" aria-labelledby="correctLabel correctCount">
+            <span class="stat-label" id="correctLabel">Correct</span>
             <span class="stat-number green" id="correctCount">0</span>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">Incorrect</span>
+          <div class="stat-row" role="group" tabindex="0" aria-labelledby="incorrectLabel incorrectCount">
+            <span class="stat-label" id="incorrectLabel">Incorrect</span>
             <span class="stat-number red" id="incorrectCount">0</span>
           </div>
-          <div class="stat-row">
-            <span class="stat-label">Grade</span>
+          <div class="stat-row" role="group" tabindex="0" aria-labelledby="gradeLabel practiceGrade">
+            <span class="stat-label" id="gradeLabel">Grade</span>
             <span class="stat-number" style="color: var(--primary);" id="practiceGrade">--</span>
           </div>
         </div>

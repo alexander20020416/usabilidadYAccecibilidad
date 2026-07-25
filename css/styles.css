@@ -1426,6 +1426,12 @@ body {
   margin-top: 1.5rem;
 }
 
+.stat-row:focus-visible {
+  outline: 4px solid #1E293B;
+  outline-offset: 4px;
+  border-radius: var(--radius-md);
+}
+
 .stats-sidebar h3 {
   font-size: 1.1rem;
   font-weight: 700;
@@ -2041,6 +2047,11 @@ body {
 
 .exercise-image:hover {
   transform: scale(1.015);
+}
+
+.exercise-image:focus-visible {
+  outline: 4px solid #1E293B;
+  outline-offset: 4px;
 }
 
 /* Accessible error state when image fails to load */
